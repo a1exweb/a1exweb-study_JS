@@ -1,24 +1,45 @@
 'use strict';
+const isNumber = function (n) {
+    return !isNaN(parseFloat(n) && isFinite(n));
+    };
 
-let money = +prompt('Ваш месячный доход?'),
-    income = 'Фриланс',
+let money;
+const start = function() {
+        do {
+            money = prompt('Ваш месячный доход?');
+        } while (!isNumber(money));
+    }();
+let income = 'Фриланс',
     addExpenses = prompt('Перечислите возможные расходы за расчитываемый период через запятую'),
     deposit = confirm('Есть ли у вас депозит в банке?'),
-    expenses1 = prompt('Введите обязательную статью расходов?'),
-    amount1 = +prompt('Во сколько это обойдётся?'),
-    expenses2 = prompt('Введите обязательную статью расходов?'),
-    amount2 = +prompt('Во сколько это обойдётся?'),
+    expenses = [],
     mission = 1000000000,
     period = 12;
 const getExpensesMonth = function () {
-        return amount1 + amount2;
+        let value;
+        let sum = 0;
+        for (let i = 0; i < 2; i++) {
+            expenses[i] = prompt('Введите обязательную статью расходов?');
+
+            do {
+                value = prompt('Во сколько это обойдется?');
+            } while (!isNumber(value));
+
+            sum += +value;
+        }
+        return sum;
     },
     getAccumulatedMonth = function () {
         return money - getExpensesMonth();
     },
     accumulatedMonth = getAccumulatedMonth(),
     getTargetMonth = function () {
-        return Math.ceil(mission / accumulatedMonth);
+        let result = Math.ceil(mission / accumulatedMonth);
+        if (result > 0) {
+            return `Цель будет достигнута за: ${result} месяцев`;
+        } else {
+            return 'Цель не будет достигнута';
+        }
     },
     showTypeOf = function(data) {
 		return typeof data;
@@ -41,6 +62,6 @@ console.log(showTypeOf(deposit));
 
 console.log(`Расходы за месяц: ${getExpensesMonth()}`);
 console.log(`Возможные расходы: ${addExpenses}`);
-console.log(`Цель будет достигнута за: ${getTargetMonth()} месяцев`);
+console.log(getTargetMonth());
 console.log(`Бюджет на день: ${budgetDay}`);
 console.log(getStatusIncome());
