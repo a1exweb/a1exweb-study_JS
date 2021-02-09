@@ -1,5 +1,27 @@
 'use strict';
 
+const calcButton = document.getElementById('start'),
+    plus1 = document.getElementsByTagName('button')[0],
+    plus2 = document.getElementsByTagName('button')[1],
+    checkboxDeposit = document.querySelector('#deposit-check'),
+    additionalIncomeItems = document.querySelectorAll('.additional_income-item'),
+    budgetMonth = document.getElementsByClassName('result-total')[0],
+    budgetDay = document.getElementsByClassName('result-total')[1],
+    expensesMonth = document.getElementsByClassName('result-total')[2],
+    additionalIncome = document.getElementsByClassName('result-total')[3],
+    additionalExpenses = document.getElementsByClassName('result-total')[4],
+    incomePeriod = document.getElementsByClassName('result-total')[5],
+    targetMonth = document.getElementsByClassName('result-total')[6],
+    salaryAmount = document.querySelector('.salary-amount'),
+    incomeTitle = document.querySelector('input.income-title'),
+    expensesTitle = document.querySelector('input.expenses-title'),
+    incomeAmount = document.querySelector('.income-amount'),
+    expensesAmount = document.querySelector('.expenses-amount'),
+    additionalExpensesItem = document.querySelector('.additional_expenses-item'),
+    targetAmount = document.querySelector('.target-amount'),
+    periodSelect = document.querySelector('.period-select');
+
+
 const isNumber = function (n) {
     return !isNaN(parseFloat(n) && isFinite(n));
 };
