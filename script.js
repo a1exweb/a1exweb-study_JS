@@ -58,8 +58,7 @@ const appData = {
                 this.addExpenses = prompt('Перечислите возможные расходы за расчитываемый период через запятую', 'Интернет, такси, коммунальные расходы');
             } while (!isString(this.addExpenses));
 
-            this.addExpenses = this.addExpenses.trim();
-            this.addExpenses = this.addExpenses.toLowerCase().split(', ');
+            this.addExpenses = this.addExpenses.toLowerCase().split(',');
             this.deposit = confirm('Есть ли у вас депозит в банке?');
 
         for (let i = 0; i < 2; i++) {
@@ -111,12 +110,12 @@ const appData = {
     },
     getExpenses: function() {
         this.addExpenses = this.addExpenses.map(item => {
-            let newItem = item.toLowerCase();
+            let newItem = item.toLowerCase().trim();
             let a = newItem.slice(0, 1).toUpperCase();
             let b = newItem.slice(1);
             return a + b;
         });
-        console.log(this.addExpenses.join(','));
+        console.log(this.addExpenses.join(', '));
     }
 };
 
