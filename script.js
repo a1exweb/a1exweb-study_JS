@@ -110,10 +110,7 @@ const appData = {
     },
     getExpenses: function() {
         this.addExpenses = this.addExpenses.map(item => {
-            let newItem = item.toLowerCase().trim();
-            let a = newItem.slice(0, 1).toUpperCase();
-            let b = newItem.slice(1);
-            return a + b;
+            return item.toLowerCase().trim().slice(0, 1).toUpperCase() + item.slice(1);
         });
         console.log(this.addExpenses.join(', '));
     }
