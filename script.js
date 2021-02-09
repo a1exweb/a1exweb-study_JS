@@ -52,10 +52,14 @@ const appData = {
 
         let expenses = [],
             value,
-            sum,
-            addExpenses = prompt('Перечислите возможные расходы за расчитываемый период через запятую', 'Интернет, такси, коммунальные расходы');
+            sum;
+            
+            do {
+                this.addExpenses = prompt('Перечислите возможные расходы за расчитываемый период через запятую', 'Интернет, такси, коммунальные расходы');
+            } while (!isString(this.addExpenses));
 
-            this.addExpenses = addExpenses.toLowerCase().split(', ');
+            this.addExpenses = this.addExpenses.trim();
+            this.addExpenses = this.addExpenses.toLowerCase().split(', ');
             this.deposit = confirm('Есть ли у вас депозит в банке?');
 
         for (let i = 0; i < 2; i++) {
@@ -94,8 +98,12 @@ const appData = {
     },
     getInfoDeposit: function() {
         if(this.deposit) {
-            this.percentDeposit = prompt('Какой годовой процент?', '10');
-            this.moneyDeposit = prompt('Какая сумма заложена?', 10000);
+            do {
+                this.percentDeposit = prompt('Какой годовой процент?', '10');
+            } while (!isNumber(this.percentDeposit));
+            do {
+                this.moneyDeposit = prompt('Какая сумма заложена?', 10000);
+            } while (!isNumber(this.moneyDeposit));
         }
     },
     calcSavedMoney: function() {
@@ -108,7 +116,7 @@ const appData = {
             let b = newItem.slice(1);
             return a + b;
         });
-        console.log(this.addExpenses.join(', '));
+        console.log(this.addExpenses.join(','));
     }
 };
 
@@ -125,7 +133,7 @@ console.log(appData.getTargetMonth());
 console.log(appData.getStatusIncome());
 console.log('Наша программа включает в себя данные:');
 
-
 for (let key in appData) {
-	console.log(key + ': ' + appData[key]);
+	let arr = key + ': ' + appData[key];
+    console.log(arr.split(',').join(', '));
 }
