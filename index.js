@@ -19,7 +19,8 @@ let start = document.getElementById('start'),
     incomeItems = document.querySelectorAll('.income-items'),
     additionalExpensesItem = document.querySelector('.additional_expenses-item'),
     targetAmount = document.querySelector('.target-amount'),
-    periodSelect = document.querySelector('.period-select');
+    periodSelect = document.querySelector('.period-select'),
+	periodАmount = document.querySelector('.period-amount');
 
 
 const isNumber = function (n) {
@@ -48,10 +49,6 @@ const appData = {
     percentDeposit: 0,
     moneyDeposit: 0,
     start: function() {
-        if (salaryAmount.value === '') {
-            alert('Ошибка, поле "Месячный доход" должно быть заполнено!');
-            return;
-        }
         
         appData.budget = +salaryAmount.value;
         
@@ -76,6 +73,9 @@ const appData = {
         additionalIncomeValue.value = this.addIncome.join(', ');
         targetMonthValue.value = Math.ceil(this.getTargetMonth());
         incomePeriodValue.value = this.calcPeriod();
+        periodSelect.addEventListener('input', function () {
+            incomePeriodValue.value = appData.calcPeriod();
+        });
     },
     addExpensesBlock: function() {
         
@@ -172,7 +172,17 @@ const appData = {
     }
 };
 
-start.addEventListener('click', appData.start);
+periodSelect.addEventListener('input', function() {
+	periodАmount.textContent = periodSelect.value;
+});
+
+start.addEventListener('click', function() {
+    if (salaryAmount.value === '') {
+        alert('Ошибка, поле "Месячный доход" должно быть заполнено!');
+    } else {
+        appData.start();
+    }
+});
 
 expensesPlus.addEventListener('click', appData.addExpensesBlock);
 incomePlus.addEventListener('click', appData.addIncomeBlock);
