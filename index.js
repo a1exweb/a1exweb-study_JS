@@ -23,16 +23,12 @@ let start = document.getElementById('start'),
 	periodАmount = document.querySelector('.period-amount');
 
 
-const isNumber = function (n) {
-    return !isNaN(parseFloat(n) && isFinite(n));
+const isNumber = function(event) {
+    event.target.value = event.target.value.replace(/\D/g, '');
 };
 
-const isString = function (str) {
-    if (!parseFloat(str) && str !== null && str.trim() !== '') {
-        return true;
-    } else {
-        return false;
-    }
+const isText = function(event) {
+	event.target.value = event.target.value.replace(/[^а-яА-Я ,]/g, '');
 };
 
 const appData = {
@@ -80,6 +76,8 @@ const appData = {
     addExpensesBlock: function() {
         
         let cloneExpensesItem = expensesItems[0].cloneNode(true);
+        cloneExpensesItem.querySelector('.expenses-title').value = '';
+        cloneExpensesItem.querySelector('.expenses-amount').value = '';
         expensesPlus.before(cloneExpensesItem);
         expensesItems = document.querySelectorAll('.expenses-items');
         if (expensesItems.length === 3) {
@@ -88,6 +86,8 @@ const appData = {
     },
     addIncomeBlock: function() {
         let cloneIncomeItem = incomeItems[0].cloneNode(true);
+        cloneIncomeItem.querySelector('.income-title').value = '';
+        cloneIncomeItem.querySelector('.income-amount').value = '';
         incomePlus.before(cloneIncomeItem);
         incomeItems = document.querySelectorAll('.income-items');
         if (incomeItems.length === 3) {
@@ -169,8 +169,24 @@ const appData = {
         this.addExpenses = this.addExpenses.map(item => item.toLowerCase().trim().slice(0, 1).toUpperCase() + item.trim().slice(1));
 
         console.log(this.addExpenses.join(', '));
+    },
+    validation: function () {
+        let sumPlaceholders = document.querySelectorAll('[placeholder="Сумма"]'),
+            textPlaceholders = document.querySelectorAll('[placeholder="Наименование"]'),
+            namePlaceholder = document.querySelectorAll('[placeholder="название"]');
+        sumPlaceholders.forEach((item) => {
+            item.addEventListener('input', isNumber);
+        });
+        textPlaceholders.forEach((item) => {
+			item.addEventListener('input', isText);
+		});
+		namePlaceholder.forEach((item) => {
+			item.addEventListener('input', isText);
+		});
     }
 };
+
+appData.validation();
 
 periodSelect.addEventListener('input', function() {
 	periodАmount.textContent = periodSelect.value;
