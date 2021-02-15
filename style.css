@@ -1,0 +1,49 @@
+html,
+body {
+    min-width: 100%;
+    min-height: 100%;
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #fff;
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#code {
+    padding: 10px 20px;
+    text-align: center;
+    background: #000;
+    border-bottom: 5px solid #fff;
+    border-radius: 20px 20px 0 0;
+}
+
+#button {
+    padding: 10px 20px;
+    border-radius: 0 0 20px 20px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 3px;
+    background: #040505;
+    color: #a0a0a0;
+    cursor: pointer;
+}
+
+#button:active {
+    position: relative;
+    top: 4px;
+}
