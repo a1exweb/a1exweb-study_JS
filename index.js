@@ -66,11 +66,9 @@ AppData.prototype.start = function() {
     reset.style.display = 'block';
     incomePlus.setAttribute('disabled', 'true');
     expensesPlus.setAttribute('disabled', 'true');
-    periodSelect.setAttribute('disabled', 'true');
 };
 
 AppData.prototype.reset = function () {
-
     textInputs.forEach(function (item) {
         item.removeAttribute('disabled');
         item.value = '';
@@ -79,9 +77,9 @@ AppData.prototype.reset = function () {
     reset.style.display = 'none';
     incomePlus.removeAttribute('disabled');
     expensesPlus.removeAttribute('disabled');
-    periodSelect.removeAttribute('disabled');
     periodSelect.value = 1;
     periodАmount.textContent = periodSelect.value;
+
     this.budget = 0;
     this.budgetDay = 0;
     this.budgetMonth = 0;
@@ -94,6 +92,7 @@ AppData.prototype.reset = function () {
     this.deposit = false;
     this.percentDeposit = 0;
     this.moneyDeposit = 0;
+    console.log(this);
 
     incomeItems.forEach(function (item) {
         incomeItems = document.querySelectorAll('.income-items');
@@ -259,7 +258,7 @@ AppData.prototype.eventListeners = function () {
         }
     });
     
-    reset.addEventListener('click', _this.reset);
+    reset.addEventListener('click', _this.reset.bind(_this));
     
     expensesPlus.addEventListener('click', _this.addExpensesBlock.bind(_this));
     incomePlus.addEventListener('click', _this.addIncomeBlock.bind(_this));
