@@ -1,42 +1,50 @@
 'use strict';
 
-const DomElement = function (selector, height, width, bg, fontSize) {
-    this.selector = selector;
+const DomElement = function (height, width, bg, position) {
     this.height = height;
     this.width = width;
     this.bg = bg;
-    this.fontSize = fontSize;
-}
+    this.position = position;
+};
+
 
 DomElement.prototype.createElement = function () {
-    let elem;
-
-    console.log(this);
-    console.log(this.selector);
+    let elem = document.createElement('div');
     
-    if (this.selector[0] === '.') {
-        elem = document.createElement('div');
-        elem.classList.add(this.selector.slice(1));
-    } else if (this.selector[0] === '#') {
-        elem = document.createElement('p');
-        elem.setAttribute('id', `${this.selector.slice(1)}`);
-    }
-
     if (elem) {
         elem.style.cssText = `
         height: ${this.height}px;
         width: ${this.width}px;
         background: ${this.bg};
         font-size: ${this.fontSize}px;
+        position: ${this.position};
         `;
-        elem.textContent = prompt('Введите текст');
         document.body.append(elem);
     }
 };
 
-const domElement = new DomElement();
+DomElement.prototype.eventListeners = function () {
+    const _this = this;
+    document.addEventListener('DOMContentLoaded', function () {
+        _this.createElement();
+    });
+    
+    window.addEventListener('keydown', function (e) {
+        let elem = document.querySelector('div');
 
-const div = new DomElement('.your-class', 150, 50, 'red', 14);
-const p = new DomElement('#your-id', 150, 200, 'green', 16);
-div.createElement();
-p.createElement();
+        let elemStyle = getComputedStyle(elem);
+
+        if (e.key === 'ArrowUp') {
+            elem.style.top = (parseFloat(elemStyle.top) - 10) + 'px';
+        } else if (e.key === 'ArrowDown') {
+            elem.style.top = (parseFloat(elemStyle.top) + 10) + 'px';
+        } else if (e.key === 'ArrowRight') {
+            elem.style.left = (parseFloat(elemStyle.left) + 10) + 'px';
+        } else if (e.key === 'ArrowLeft') {
+            elem.style.left = (parseFloat(elemStyle.left) - 10) + 'px';
+        }
+    });
+};
+
+const domElement = new DomElement();
+const box = new DomElement(100, 100, 'red', 'absolute').eventListeners();
