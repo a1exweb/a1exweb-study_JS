@@ -167,7 +167,7 @@ class AppData {
             addIncomeItems.push(item.value);
         });
 
-        const count = (item, arr) => {
+        const count = (item, index, arr) => {
             item.trim();
             if (item !== '') {
                 if (arr === addExpensesItems) {
