@@ -52,6 +52,91 @@ class AppData {
         e.target.value = e.target.value.replace(/[^а-яА-Я ,]/g, '');
     }
 
+    getCookie(name) {
+        const matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURI(matches[1]) : undefined;
+    }
+
+    setCookie(name, value, options = {}) {
+
+		options = {
+			path: '/',
+		};
+
+		if (options.expires instanceof Date) {
+			options.expires = options.expires.toUTCString();
+		}
+
+		let updatedCookie = encodeURI(name) + "=" + encodeURI(value);
+
+		for (const optionKey in options) {
+			updatedCookie += "; " + optionKey;
+			const optionValue = options[optionKey];
+			if (optionValue !== true) {
+				updatedCookie += "=" + optionValue;
+			}
+		}
+
+		document.cookie = updatedCookie;
+		localStorage.setItem(name, value);
+	}
+
+    deleteCookie(name) {
+		const cookieDate = new Date();
+		cookieDate.setTime(cookieDate.getTime() - 1);
+		document.cookie = name += "=; expires=" + cookieDate.toGMTString();
+	}
+
+    cookiesNames() {
+		const cookiesNames = document.cookie.split("; ").map(item => {
+			const to = item.search('=');
+			const newstr = item.substring(0, to);
+			return newstr;
+		});
+		return cookiesNames;
+	}
+
+    showLocalResult() {
+
+		const localNames = [];
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			localNames.push(key);
+		}
+		console.log(this.cookiesNames());
+		localNames.forEach(item => {
+			console.log(item);
+			if (!this.cookiesNames().includes(item) && this.cookiesNames().length >= 1) {
+				this.cookiesNames().forEach(item => {
+					this.deleteCookie(item);
+				});
+				localStorage.clear();
+			}
+		});
+
+		if (localStorage.length !== 0) {
+			textInputs.forEach(item => {
+				item.setAttribute("disabled", "true");
+			});
+			start.style.display = 'none';
+			reset.style.display = 'block';
+			incomePlus.setAttribute("disabled", "true");
+			expensesPlus.setAttribute("disabled", "true");
+			depositCheck.setAttribute("disabled", "true");
+			depositBank.setAttribute("disabled", "true");
+		}
+
+		budgetMonthValue.value = localStorage.getItem('budgetMonthValue');
+		budgetDayValue.value = localStorage.getItem('budgetDayValue');
+		expensesMonthValue.value = localStorage.getItem('expensesMonthValue');
+		additionalExpensesValue.value = localStorage.getItem('additionalExpensesValue');
+		additionalIncomeValue.value = localStorage.getItem('additionalIncomeValue');
+		targetMonthValue.value = localStorage.getItem('targetMonthValue');
+		incomePeriodValue.value = localStorage.getItem('incomePeriodValue');
+	}
+
     start() {
         this.budget = +salaryAmount.value;
         this.getExpInc();
@@ -71,6 +156,15 @@ class AppData {
         expensesPlus.setAttribute('disabled', 'true');
         depositCheck.setAttribute('disabled', 'true');
         depositBank.setAttribute('disabled', 'true');
+
+        this.setCookie('budgetMonthValue', budgetMonthValue.value);
+		this.setCookie('budgetDayValue', budgetDayValue.value);
+		this.setCookie('expensesMonthValue', expensesMonthValue.value);
+		this.setCookie('additionalIncomeValue', additionalIncomeValue.value);
+		this.setCookie('additionalExpensesValue', additionalExpensesValue.value);
+		this.setCookie('incomePeriodValue', incomePeriodValue.value);
+		this.setCookie('targetMonthValue', targetMonthValue.value);
+		this.setCookie('isLoad', true);
     }
 
     reset() {
@@ -119,6 +213,10 @@ class AppData {
 
         depositCheck.checked = false;
         this.depositHandler();
+        this.cookiesNames().forEach(item => {
+			this.deleteCookie(item);
+		});
+		localStorage.clear();
     }
 
     showResult() {
@@ -176,7 +274,7 @@ class AppData {
             addIncomeItems.push(item.value);
         });
 
-        const count = (item, arr) => {
+        const count = (item, index, arr) => {
             item.trim();
             if (item !== '') {
                 if (arr === addExpensesItems) {
@@ -301,7 +399,8 @@ class AppData {
 
     eventListeners() {
         const _this = this;
-
+        _this.validation();
+        _this.showLocalResult();
         depositCheck.addEventListener('change', _this.depositHandler.bind(_this));
 
         periodSelect.addEventListener('input', function() {
@@ -334,12 +433,4 @@ class AppData {
 
 
 const appData = new AppData();
-
-console.log(appData);
-
-
-
-appData.validation();
 appData.eventListeners();
-
-
