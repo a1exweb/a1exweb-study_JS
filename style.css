@@ -1,0 +1,42 @@
+.first,
+.center,
+.last {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: black;
+}
+
+.first,
+.last {
+    position: relative;
+}
+
+.last {
+    left: 0;
+}
+
+.first {
+    right: 0;
+}
+
+body,
+.center-block {
+    display: flex;
+}
+
+body {
+    justify-content: center;
+}
+
+#start {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#reset {
+    position: absolute;
+    top: 0;
+    left: 90px;
+}

@@ -1,38 +1,78 @@
 'use strict';
 
-const input = document.querySelector('input'),
-    text = document.querySelector('p');
+let idAnimation;
+const firstBall = document.querySelector('.first'),
+    lastBall = document.querySelector('.last'),
+    startBtn = document.getElementById('start'),
+    resetBtn = document.getElementById('reset');
+let count = 0,
+    lastLeft = parseInt(window.getComputedStyle(lastBall).getPropertyValue("left")),
+    firstRight = parseInt(window.getComputedStyle(firstBall).getPropertyValue("right")),
+    lastBallPosition = false,
+    firstBallPosition = false,
+    rightStart = true,
+    leftStart = false;
 
-function inputText() {
-    text.textContent = input.value;
-}
 
-function throttle(func, ms) {
-    let isTrotled = false,
-        savedArgs,
-        savedThis;
+const animation = () => {
+    lastLeft = parseInt(window.getComputedStyle(lastBall).getPropertyValue("left"));
+    firstRight = parseInt(window.getComputedStyle(firstBall).getPropertyValue("right"));
+    idAnimation = requestAnimationFrame(animation);
 
-    const wrapper = () => {
-        if(isTrotled) {
-            savedArgs = arguments;
-            savedThis = this;
-            return;
+    if (!leftStart && rightStart) {
+        if (lastLeft < 100 && rightStart) {
+            count++;
+            lastBall.style.left = `${count*2}px`;
+        } else {
+            rightStart = false;
+            firstBallPosition = true;
         }
+    } else if (firstBallPosition && !leftStart) {
 
-        func.apply(this, arguments);
-        isTrotled = true;
+        if (lastLeft > 0 && firstBallPosition) {
+            count--;
+            lastBall.style.left = `${(count*2)}px`;
+        } else {
+            count = 0;
+            firstBallPosition = false;
+            leftStart = true;
+        }
+    } else if (leftStart && !rightStart) {
+        if (firstRight < 100 && leftStart) {
+            count++;
+            firstBall.style.right = `${count*2}px`;
+        } else {
+            leftStart = false;
+            lastBallPosition = true;
+        }
+    } else if (lastBallPosition && !rightStart) {
+        if (firstRight > 0 && !leftStart) {
+            count--;
+            firstBall.style.right = `${(count*2)}px`;
+        } else {
+            count = 0;
+            lastBallPosition = false;
+            rightStart = true;
+        }
+    }
+};
 
-        setTimeout(() => {
-            isTrotled = false;
-            if (savedArgs) {
-                wrapper.apply(savedThis, savedArgs);
-                savedArgs = savedThis = null;
-            }
-        }, ms);
-    };
-    return wrapper;
-}
+let animate = false;
 
-let hold = throttle(inputText, 300);
+startBtn.addEventListener('click', () => {
+    if (!animate) {
+        idAnimation = requestAnimationFrame(animation);
+        animate = true;
+    } else {
+        cancelAnimationFrame(idAnimation);
+        animate = false;
+    }
+});
 
-input.addEventListener('input', hold);
+resetBtn.addEventListener('click', () => {
+    cancelAnimationFrame(idAnimation);
+    count = 0;
+    firstBall.style.right = 0;
+    lastBall.style.left = 0;
+    animate = false;
+});
