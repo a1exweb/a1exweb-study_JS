@@ -1,6 +1,6 @@
 {
-	"camelcase" : true,
-	"indent": 2,
+	"camelcase": true,
+	"indent": 4,
 	"undef": true,
 	"quotmark": false,
 	"maxlen": 120,
@@ -10,10 +10,10 @@
 	"browser": true,
 	"devel": true,
 	"jquery": true,
-	"esversion": 6,
+	"esversion": 9,
 	"eqeqeq": true,
 	"latedef": true,
 	"noempty": true,
-    "funcscope": true,
-    "node": true
+	"funcscope": true,
+	"node": true
 }
