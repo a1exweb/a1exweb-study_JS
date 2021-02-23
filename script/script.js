@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     // Таймер
-    function countTimer(deadline) {
+    const countTimer = (deadline) => {
         const timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
             timerSeconds = document.querySelector('#timer-seconds');
@@ -47,7 +47,7 @@ window.addEventListener('DOMContentLoaded', function() {
             timerMinutes.textContent = '00';
             timerSeconds.textContent = '00';
         }
-    }
+    };
     countTimer('23 feb 2021');
 
 
@@ -128,4 +128,26 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     };
     togglePopUp();
+
+    // скрипт плавной прокрутки страницы
+    const scroll = () => {
+        const anchors = document.querySelectorAll('a[href*="#"');
+
+        for (const anchor of anchors) {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const blockId = anchor.getAttribute('href'),
+                    idElem = document.querySelector(blockId);
+                if (idElem) {
+                    const idElemY = idElem.offsetTop;
+                    window.scrollTo({
+                        top: idElemY,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    };
+    scroll();
 });
