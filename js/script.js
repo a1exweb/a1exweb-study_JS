@@ -62,35 +62,53 @@ class Todo {
     }
 
     deleteItem(elem){
-        let count = 0;
-        let int = setInterval(() => {
-            count += 5;
-            elem.parentNode.style.zoom = count + '%';
-            if (count > 100){
-                clearInterval(int);
-                this.todoData.delete(elem.parentElement.key);
-                this.render();
-            }
+        this.todoData.delete(elem.parentElement.key);
+        setTimeout(() => {
+            this.render();
         }, 10);
     }
 
     completedItem(elem) {
-        let count = 0;
-        let int = setInterval(() => {
-            count += 5;
-            elem.parentNode.style.zoom = count + '%';
-            if (count > 100){
-                clearInterval(int);
-    
-                this.todoData.forEach((val, key) => {
-                    if (key === elem.parentElement.key) {
-                        val.completed = !val.completed;
-                    }
-                });
-                this.render();
+        this.todoData.forEach((val, key) => {
+            if (key === elem.parentElement.key) {
+                val.completed = !val.completed;
             }
+        });
+        setTimeout(() => {
+            this.render();
         }, 10);
     }
+
+    animDel(elem) {
+        let count = 100;
+        const step = 5;
+        const del = () => {
+            count -= step;
+            elem.parentNode.style.zoom = count / 100;
+            if (count > 0) {
+                setTimeout(() => {
+                    requestAnimationFrame(del);
+                }, 50);
+            }
+        };
+        requestAnimationFrame(del);
+    }
+
+    animAdd(elem) {
+        let count = 0;
+        const step = 5;
+        const add = () => {
+            count += step;
+            elem.parentNode.style.zoom = count / 100;
+            if (count < 100) {
+                setTimeout(() => {
+                    requestAnimationFrame(add);
+                }, 50);
+            }
+        };
+        requestAnimationFrame(add);
+    }
+    
 
     edit(elem){
         elem.parentElement.children[0].contentEditable = "true";
@@ -119,13 +137,23 @@ class Todo {
 
     handler(){
         this.container.addEventListener('click', (e)=> {
-            let target = e.target;
+            const target = e.target,
+                elem = target.parentElement;
             if (target.classList.contains('todo-remove')) {
-                this.deleteItem(target.parentElement);
+                this.animDel(elem);
+                setTimeout(() => {
+                    this.deleteItem(elem);
+                }, 500);
             } else if (target.classList.contains('todo-complete')) {
-                this.completedItem(target.parentElement );
+                setTimeout(() => {
+                    this.completedItem(elem);
+                }, 500);
+                setTimeout(() => {
+                    this.animAdd(elem);
+                }, 0);
+
             } else if (target.classList.contains('todo-edit')) {
-                this.edit(target.parentElement);
+                this.edit(elem);
             }
         });
     }
