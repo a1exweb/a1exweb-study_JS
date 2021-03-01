@@ -371,7 +371,7 @@ window.addEventListener('DOMContentLoaded', function() {
             });
             item.addEventListener('blur', (e) => {
                 const target = e.target;
-                console.log(target.value);
+                // target.value = target.value.replace(/ +/g, ' ').trim(); без keypress если
                 target.value = target.value.replace(/^[ -]*|( |-)(?=\1)|[ -]*$/g, '').replace(/ +/g, ' ').trim();
             });
         });
