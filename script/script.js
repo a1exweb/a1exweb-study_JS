@@ -339,9 +339,19 @@ window.addEventListener('DOMContentLoaded', function() {
             };
             yourName.forEach((item) => {
                 item.addEventListener('input', check);
+                item.addEventListener('blur', (e) => {
+                    const target = e.target;
+                    target.value = target.value.replace(/ +/g, ' ').trim();
+                    target.value = target.value.replace(/([А-ЯЁ])/g, x => x.toLowerCase());
+                    target.value = target.value.replace(/(( |^)[а-яё])(?=[а-яё])/g, x => x.toUpperCase());
+                });
             });
             yourMessage.forEach((item) => {
                 item.addEventListener('input', check);
+                item.addEventListener('blur', (e) => {
+                    const target = e.target;
+                    target.value = target.value.replace(/^[ -]*|( |-)(?=\1)|[ -]*$/g, '').replace(/ +/g, ' ').trim();
+                });
             });
     };
     checkCyr();
@@ -354,7 +364,16 @@ window.addEventListener('DOMContentLoaded', function() {
                 target.value = target.value.replace(/[^a-z@\-_.!~*']/ig, '');
             };
             item.addEventListener('input', checkThis);
-            item.addEventListener('blur', checkThis);
+            item.addEventListener('keypress', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                }
+            });
+            item.addEventListener('blur', (e) => {
+                const target = e.target;
+                console.log(target.value);
+                target.value = target.value.replace(/^[ -]*|( |-)(?=\1)|[ -]*$/g, '').replace(/ +/g, ' ').trim();
+            });
         });
     };
     checkMail();
