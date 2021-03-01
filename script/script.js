@@ -297,4 +297,76 @@ window.addEventListener('DOMContentLoaded', function() {
         startSlide(1500);
     };
     slider();
+
+    // наша команда
+    const changeImage = () => {
+        const commandPhoto = document.querySelectorAll('.command__photo');
+        commandPhoto.forEach((item) => {
+            item.addEventListener('mouseover', (e) => {
+                const target = e.target;
+                [target.src, target.dataset.img] = [target.dataset.img, target.src];
+            });
+        });
+
+        commandPhoto.forEach((item) => {
+            item.addEventListener('mouseout', (e) => {
+                const target = e.target;
+                [target.dataset.img, target.src] = [target.src, target.dataset.img];
+            });
+        });
+    };
+    changeImage();
+
+    // калькулятор
+    const calculator = () => {
+        const calcBlock = document.querySelector('.calc-block');
+        calcBlock.addEventListener('input', (e) => {
+            const target = e.target;
+            if (target.matches('[type="text"]')) {
+                target.value = target.value.replace(/\D/g, '');
+            }
+        });
+    };
+    calculator();
+
+    // регулярные выражения
+    const checkCyr = () => {
+        const yourName = document.querySelectorAll('[placeholder="Ваше имя"]'),
+            yourMessage = document.querySelectorAll('[placeholder="Ваше сообщение"]');
+            const check = (e) => {
+                const target = e.target;
+                target.value = target.value.replace(/[^а-я-ё\-\s]/ig, '');
+            };
+            yourName.forEach((item) => {
+                item.addEventListener('input', check);
+            });
+            yourMessage.forEach((item) => {
+                item.addEventListener('input', check);
+            });
+    };
+    checkCyr();
+
+    const checkMail = () => {
+        const mail = document.querySelectorAll('[placeholder="E-mail"');
+        mail.forEach((item) => {
+            const checkThis = (e) => {
+                const target = e.target;
+                target.value = target.value.replace(/[^a-z@\-_.!~*']/ig, '');
+            };
+            item.addEventListener('input', checkThis);
+            item.addEventListener('blur', checkThis);
+        });
+    };
+    checkMail();
+
+    const checkPhone = () => {
+        const phone = document.querySelectorAll('[placeholder="Номер телефона"]');
+        phone.forEach((item) => {
+            item.addEventListener('input', (e) => {
+                const target = e.target;
+                target.value = target.value.replace(/[^\-()\d]/g , '');
+            });
+        });
+    };
+    checkPhone();
 });
