@@ -388,4 +388,31 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     };
     checkPhone();
+
+    // калькулятор
+    const calc = () => {
+        const calcBlock = document.querySelector('.calc-block'),
+            calcType = document.querySelector('.calc-type'),
+            calcSqure = document.querySelector('.calc-square'),
+            calcDay = document.querySelector('.calc-day'),
+            calcCount = document.querySelector('.calc-count'),
+            totalValue = document.getElementById('#total');
+
+        count 
+        
+        calcBlock.addEventListener('change', (e) => {
+            const target = e.target;
+            // if (target.matches('.calc-type') || target.matches('.calc-square') ||
+            // target.matches('.calc-day') || target.matches('.calc-count')) {
+            // }
+            // if (target === calcType || target === calcSqure ||
+            // target === calcDay || target === calcCount) {
+            // }
+
+            if (target.matches('select') || target.matches('input')) {
+                countSum();
+            }
+        });
+    };
+    calc();
 });
