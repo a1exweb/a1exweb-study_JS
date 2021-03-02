@@ -331,8 +331,8 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // регулярные выражения
     const checkCyr = () => {
-        const yourName = document.querySelectorAll('[placeholder="Ваше имя"]'),
-            yourMessage = document.querySelectorAll('[placeholder="Ваше сообщение"]');
+        const yourName = document.querySelectorAll('[name="user_name"]'),
+            yourMessage = document.querySelectorAll('[name="user_message"]');
             const check = (e) => {
                 const target = e.target;
                 target.value = target.value.replace(/[^а-я-ё\-\s]/ig, '');
@@ -357,7 +357,7 @@ window.addEventListener('DOMContentLoaded', function() {
     checkCyr();
 
     const checkMail = () => {
-        const mail = document.querySelectorAll('[placeholder="E-mail"');
+        const mail = document.querySelectorAll('[name="user_email"]');
         mail.forEach((item) => {
             const checkThis = (e) => {
                 const target = e.target;
@@ -379,7 +379,7 @@ window.addEventListener('DOMContentLoaded', function() {
     checkMail();
 
     const checkPhone = () => {
-        const phone = document.querySelectorAll('[placeholder="Номер телефона"]');
+        const phone = document.querySelectorAll('[name="user_phone"]');
         phone.forEach((item) => {
             item.addEventListener('input', (e) => {
                 const target = e.target;
