@@ -73,28 +73,27 @@ window.addEventListener('DOMContentLoaded', function() {
     };
     toggleMenu();
 
+    function animate({timing, draw, duration}) {
+        const start = performance.now();
+
+        requestAnimationFrame(function animate(time) {
+            let timeFraction = (time - start) / duration;
+            if (timeFraction > 1) {
+                timeFraction = 1;
+            }
+
+            const progress = timing(timeFraction);
+            draw(progress);
+            if (timeFraction < 1) {
+                requestAnimationFrame(animate);
+            }
+        });
+    }
 
     // popup
     const togglePopUp = () => {
         const popUp = document.querySelector('.popup'),
             popUpBtns = document.querySelectorAll('.popup-btn');
-
-        function animate({timing, draw, duration}) {
-            const start = performance.now();
-
-            requestAnimationFrame(function animate(time) {
-                let timeFraction = (time - start) / duration;
-                if (timeFraction > 1) {
-                    timeFraction = 1;
-                }
-
-                const progress = timing(timeFraction);
-                draw(progress);
-                if (timeFraction < 1) {
-                    requestAnimationFrame(animate);
-                }
-            });
-        }
 
         popUpBtns.forEach(elem => {
             elem.addEventListener('click', () => {
@@ -419,7 +418,15 @@ window.addEventListener('DOMContentLoaded', function() {
                 total = price * typeValue * squareValue * countValue * dayValue;
             }
 
-            totalValue.textContent = total;
+            animate({
+                duration: 500,
+                timing(timeFraction) {
+                    return timeFraction;
+                },
+                draw(progress) {
+                    totalValue.textContent = Math.floor(progress * total);
+                }
+            });
         };
         
         calcBlock.addEventListener('change', (e) => {
