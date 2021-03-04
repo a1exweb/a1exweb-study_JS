@@ -483,7 +483,9 @@ window.addEventListener('DOMContentLoaded', function() {
 		const postData = (body, outputData, errorData) => {
 			const request = new XMLHttpRequest();
 			request.addEventListener('readystatechange', () => {
-				if (request.readyState !== 4) return;
+				if (request.readyState !== 4) {
+                    return;
+                }
 
 				if (request.status === 200) {
 					form.reset();
@@ -526,7 +528,15 @@ window.addEventListener('DOMContentLoaded', function() {
 				errorValidation(emailInput);
 			}
 			if (telPatern.test(telInput.value) && emailPatern.test(emailInput.value)) {
-				statusMessage.textContent = loadMessage;
+				statusMessage.innerHTML = `
+                <div class="container-box">
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                </div>
+                `;
 
 				postData(
 					body,
