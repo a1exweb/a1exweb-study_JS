@@ -541,7 +541,10 @@ window.addEventListener('DOMContentLoaded', function() {
 				postData(
 					body,
 					() => (statusMessage.textContent = succesMessge),
-					() => (statusMessage.textContent = errorMessage)
+					() => (statusMessage.textContent = errorMessage),
+                    setTimeout(() => {
+                        statusMessage.parentNode.removeChild(statusMessage);
+                    }, 7000)
 				);
 			}
 		});
