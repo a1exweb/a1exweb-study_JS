@@ -441,58 +441,138 @@ window.addEventListener('DOMContentLoaded', function() {
     calc(100);
 
     // send-ajax-form
-    const sendForm = () => {
-        const errorMessage = 'Что то пошло не так...',
-            loadMessage = 'Загрузка...',
-            successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+    const sendForm = form => {
+		const errorMessage = 'Что то пошло не так...',
+			loadMessage = 'Загрузка...',
+			succesMessge = 'Спасибо! Мы скоро с Вами свяжемся';
 
-        const form = document.getElementById('form1');
-        const statusMessage = document.createElement('div');
-        statusMessage.style.cssText = 'font-size: 2rem';
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            form.appendChild(statusMessage);
-            statusMessage.textContent = loadMessage;
+		const statusMessage = document.createElement('div');
+		statusMessage.style.cssText = `
+			font-size: 1.2rem;
+			color: #fff;
+		`;
 
-            const formData = new FormData(form);
-            let body = {};
+		const successValidation = elem => {
+			if (elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')) {
+				elem.nextElementSibling.remove();
+			}
+			elem.style.border = 'none';
+		};
 
-            // for (let val of formData.entries()) {
-            //     body[val[0]] = val[1];
-            // }
+		const errorValidation = elem => {
+			if (elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')) {
+				return;
+			}
+			elem.style.cssText = 'border: 1px solid tomato';
+			const errorValid = document.createElement('div');
+			errorValid.classList.add('validator-error');
 
-            formData.forEach((val, key) => {
-                body[key] = val;
-            });
+			if (elem.type === 'tel') {
+				errorValid.insertAdjacentHTML('afterbegin', 'Введите номер в формате <br> +7 (800) 900-77-66'); 
+			} else if (elem.type === 'email') {
+				errorValid.insertAdjacentHTML('afterbegin', 'Введите email в формате <br> email@domain.ru');
+			}
 
-            const postData = (body, outputData, errorData) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-                    if (request.readyState !== 4) {
-                        return;
-                    }
-                    if (request.status === 200) {
-                        outputData();
-                    } else {
-                        errorData(request.status);
-                    }
-                });
-    
-                request.open('POST', './server.php');
-                request.setRequestHeader('Content-Type', 'application/json');
-                request.send(JSON.stringify(body));
-            };
+			errorValid.style.cssText = `
+					color: tomato;
+					font-size: 1.2rem;
+				`;
+			elem.insertAdjacentElement('afterend', errorValid);
+		};
 
+		const postData = (body, outputData, errorData) => {
+			const request = new XMLHttpRequest();
+			request.addEventListener('readystatechange', () => {
+				if (request.readyState !== 4) return;
 
-            postData(body, () => {
-                statusMessage.textContent = successMessage;
-            }, (error) => {
-                statusMessage.textContent = errorMessage;
-                console.error(error);
-            });
-        });
+				if (request.status === 200) {
+					form.reset();
+					outputData();
+				} else {
+					errorData();
+				}
+			});
 
-        
-    };
-    sendForm();
+			request.open('POST', 'server.php');
+			request.setRequestHeader('Content-Type', 'application/json');
+			request.send(JSON.stringify(body));
+		};
+
+		form.addEventListener('submit', event => {
+			const telInput = form.querySelector('[type="tel"]'),
+				emailInput = form.querySelector('[type="email"]'),
+				telPatern = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10}$/,
+				emailPatern = /^\w+@\w+\.\w{2,}$/;
+
+			event.preventDefault();
+			form.append(statusMessage);
+
+			const formData = new FormData(form);
+
+			const body = {};
+
+			formData.forEach((val, key) => {
+				body[key] = val;
+			});
+
+			if (telPatern.test(telInput.value)) {
+				successValidation(telInput);
+			} else {
+				errorValidation(telInput);
+			}
+			if (emailPatern.test(emailInput.value)) {
+				successValidation(emailInput);
+			} else {
+				errorValidation(emailInput);
+			}
+			if (telPatern.test(telInput.value) && emailPatern.test(emailInput.value)) {
+				statusMessage.textContent = loadMessage;
+
+				postData(
+					body,
+					() => (statusMessage.textContent = succesMessge),
+					() => (statusMessage.textContent = errorMessage)
+				);
+			}
+		});
+
+		const validate = form => {
+			const tel = form.querySelector('[type="tel"]'),
+				email = form.querySelector('[type="email"]'),
+				name = form.querySelector('[type="text"]'),
+				text = form.querySelector('[placeholder="Ваше сообщение"]');
+
+			tel.addEventListener('input', e => {
+				const target = e.target;
+				target.value = target.value.replace(/[^+0-9]/g, '');
+			});
+
+			email.addEventListener('input', e => {
+				const target = e.target;
+				target.value = target.value.replace(/[^@a-zA-Z0-9.-_]/g, '');
+			});
+
+			name.addEventListener('input', e => {
+				const target = e.target;
+				target.value = target.value.replace(/[^а-яА-Я ]/g, '');
+			});
+
+			if (text) {
+				text.addEventListener('input', e => {
+					const target = e.target;
+					target.value = target.value.replace(/[^а-яА-Я ,.!]/g, '');
+				});
+			}
+		};
+
+		validate(form);
+	};
+
+	const forms = document.querySelectorAll('form');
+
+	forms.forEach(item => {
+		sendForm(item);
+	});
+
+    maskPhone('input[type=tel]');
 });
