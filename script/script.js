@@ -443,7 +443,6 @@ window.addEventListener('DOMContentLoaded', function() {
     // send-ajax-form
     const sendForm = form => {
 		const errorMessage = 'Что то пошло не так...',
-			loadMessage = 'Загрузка...',
 			succesMessage = 'Спасибо! Мы скоро с Вами свяжемся';
 
 		const statusMessage = document.createElement('div');
@@ -481,23 +480,13 @@ window.addEventListener('DOMContentLoaded', function() {
 		};
 
 		const postData = body =>
-            new Promise((resolve, reject) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-                    if (request.readyState !== 4) {
-                        return;
-                    }
-
-                    if (request.status === 200) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
+                fetch('./server.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
                 });
-                request.open('POST', 'server.php');
-                request.setRequestHeader('Content-Type', 'application/json');
-                request.send(JSON.stringify(body));
-			});
 
 		form.addEventListener('submit', event => {
 			const telInput = form.querySelector('[type="tel"]'),
@@ -538,13 +527,20 @@ window.addEventListener('DOMContentLoaded', function() {
                 `;
 
 				postData(body)
-                    .then(() => {
+                    .then(response => {
+                        if(response.status !== 200) {
+                            throw new Error('status network not 200');
+                        }
                         form.reset();
                         statusMessage.innerHTML = succesMessage;
                     })
-                    .catch(() => {
+                    .catch(error => {
                         statusMessage.innerHTML = errorMessage;
+                        console.error(error);
                     });
+                    setTimeout(() => {
+                        statusMessage.parentNode.removeChild(statusMessage);
+                    }, 7000);
                 }
         });
 
