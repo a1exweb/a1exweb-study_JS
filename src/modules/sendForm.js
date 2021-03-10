@@ -3,6 +3,7 @@ const sendForm = form => {
         succesMessage = 'Спасибо! Мы скоро с Вами свяжемся';
 
     const statusMessage = document.createElement('div');
+    statusMessage.classList.add('thanks-message');
     statusMessage.style.cssText = `
         font-size: 1.2rem;
         color: #fff;
@@ -97,7 +98,7 @@ const sendForm = form => {
                 });
                 setTimeout(() => {
                     statusMessage.parentNode.removeChild(statusMessage);
-                }, 7000);
+                }, 700000);
             }
     });
 
