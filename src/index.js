@@ -14,7 +14,7 @@ import calc from './modules/calc';
 import sendForm from './modules/sendForm';
 import maskPhone  from './modules/maskPhone';
 
-countTimer('23 feb 2021');
+countTimer('1 sep 2021');
 toggleMenu();
 togglePopUp();
 scroll();
