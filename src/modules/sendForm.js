@@ -98,7 +98,7 @@ const sendForm = form => {
                 });
                 setTimeout(() => {
                     statusMessage.parentNode.removeChild(statusMessage);
-                }, 700000);
+                }, 7000);
             }
     });
 
