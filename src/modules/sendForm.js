@@ -26,8 +26,10 @@ const sendForm = form => {
 
         if (elem.type === 'tel') {
             errorValid.insertAdjacentHTML('afterbegin', 'Введите номер в формате <br> +7 (800) 900-77-66'); 
-        } else if (elem.type === 'email') {
+        } if (elem.type === 'email') {
             errorValid.insertAdjacentHTML('afterbegin', 'Введите email в формате <br> email@domain.ru');
+        } else if (elem.name === 'user_name') {
+            errorValid.insertAdjacentHTML('afterbegin', 'Имя должно быть минимум из двух символов');
         }
 
         errorValid.style.cssText = `
@@ -47,8 +49,10 @@ const sendForm = form => {
             });
 
     form.addEventListener('submit', event => {
-        const telInput = form.querySelector('[type="tel"]'),
+        const nameInput = form.querySelector('[name="user_name"]'),
+            telInput = form.querySelector('[type="tel"]'),
             emailInput = form.querySelector('[type="email"]'),
+            namePatern = /^[а-яА-ЯЁё]{2,}$/,
             telPatern = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10}$/,
             emailPatern = /^\w+@\w+\.\w{2,}$/;
 
@@ -63,6 +67,12 @@ const sendForm = form => {
             body[key] = val;
         });
 
+        if (namePatern.test(nameInput.value)) {
+            successValidation(nameInput);
+        } else {
+            errorValidation(nameInput);
+        }
+
         if (telPatern.test(telInput.value)) {
             successValidation(telInput);
         } else {
@@ -73,7 +83,7 @@ const sendForm = form => {
         } else {
             errorValidation(emailInput);
         }
-        if (telPatern.test(telInput.value) && emailPatern.test(emailInput.value)) {
+        if (telPatern.test(telInput.value) && emailPatern.test(emailInput.value) && namePatern.test(nameInput.value)) {
             statusMessage.innerHTML = `
             <div class="container-box">
                 <div class="box"></div>
@@ -97,7 +107,17 @@ const sendForm = form => {
                     console.error(error);
                 });
                 setTimeout(() => {
-                    statusMessage.parentNode.removeChild(statusMessage);
+                    statusMessage.style.transition = `1000ms`;
+                    statusMessage.style.opacity = `0`;
+                    statusMessage.addEventListener(`transitionend`,
+                    e => {
+                        const target = e.target;
+                        if (target.closest(`.popup`)) {
+                            target.closest(`.popup`).style.display = `none`;
+                        }
+                        statusMessage.style.cssText = ``;
+                        statusMessage.remove();
+                    });
                 }, 7000);
             }
     });
